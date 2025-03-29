@@ -18,6 +18,10 @@ module.exports = {
     },
     extend: {
       colors: {
+        customRainee: '#c0c7aa',
+        customSeaweed: '#203113',
+        customWasabi: '728C2D',
+        customKelp: '#4E5242',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

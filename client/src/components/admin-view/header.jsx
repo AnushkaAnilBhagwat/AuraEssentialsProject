@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { AlignJustify, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
@@ -28,5 +29,10 @@ function AdminHeader({ setOpen }) {
     </header>
   );
 }
+
+// ✅ Add PropTypes validation
+AdminHeader.propTypes = {
+  setOpen: PropTypes.func.isRequired, // setOpen must be a function and required
+};
 
 export default AdminHeader;

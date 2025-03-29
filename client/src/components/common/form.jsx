@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
@@ -124,5 +125,29 @@ function CommonForm({
     </form>
   );
 }
+
+CommonForm.propTypes = {
+  formControls: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      placeholder: PropTypes.string,
+      type: PropTypes.string,
+      componentType: PropTypes.oneOf(["input", "select", "textarea"])
+        .isRequired,
+      options: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          label: PropTypes.string.isRequired,
+        })
+      ),
+    })
+  ).isRequired,
+  formData: PropTypes.object.isRequired,
+  setFormData: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  buttonText: PropTypes.string,
+  isBtnDisabled: PropTypes.bool,
+};
 
 export default CommonForm;
