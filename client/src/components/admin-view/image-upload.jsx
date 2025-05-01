@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -10,7 +11,6 @@ function ProductImageUpload({
   imageFile,
   setImageFile,
   imageLoadingState,
-  uploadedImageUrl,
   setUploadedImageUrl,
   setImageLoadingState,
   isEditMode,
@@ -45,25 +45,32 @@ function ProductImageUpload({
     }
   }
 
-  async function uploadImageToCloudinary() {
-    setImageLoadingState(true);
-    const data = new FormData();
-    data.append("my_file", imageFile);
-    const response = await axios.post(
-      "http://localhost:5000/api/admin/products/upload-image",
-      data
-    );
-    console.log(response, "response");
-
-    if (response?.data?.success) {
-      setUploadedImageUrl(response.data.result.url);
-      setImageLoadingState(false);
-    }
-  }
-
   useEffect(() => {
-    if (imageFile !== null) uploadImageToCloudinary();
-  }, [imageFile]);
+    async function uploadImage() {
+      if (!imageFile) return;
+      setImageLoadingState(true);
+
+      const data = new FormData();
+      data.append("my_file", imageFile);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/admin/products/upload-image",
+          data
+        );
+
+        if (response?.data?.success) {
+          setUploadedImageUrl(response.data.result.url);
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      } finally {
+        setImageLoadingState(false);
+      }
+    }
+
+    uploadImage();
+  }, [imageFile, setUploadedImageUrl, setImageLoadingState]); // ✅ Include necessary dependencies
 
   return (
     <div
@@ -118,5 +125,17 @@ function ProductImageUpload({
     </div>
   );
 }
+
+// ✅ Add PropTypes validation
+ProductImageUpload.propTypes = {
+  imageFile: PropTypes.instanceOf(File), // Can be null initially
+  setImageFile: PropTypes.func.isRequired,
+  imageLoadingState: PropTypes.bool.isRequired,
+  uploadedImageUrl: PropTypes.string,
+  setUploadedImageUrl: PropTypes.func.isRequired,
+  setImageLoadingState: PropTypes.func.isRequired,
+  isEditMode: PropTypes.bool.isRequired,
+  isCustomStyling: PropTypes.bool,
+};
 
 export default ProductImageUpload;
